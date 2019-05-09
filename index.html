@@ -27,10 +27,62 @@
 
                 <div class="form-group">
                     <label for="menuitemselect">Item: </label>
-                    <select name="item" id="menuitemselect" class="w-100" >
+                    <select name="item" id="menuitemselect" class="w-100" onchange="itemSelect(event)">
                     </select>
                 </div>
 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+
+                <div class="form-group">
+                    <label for="itemname">Name: </label>
+                    <input type="text" name="name" id="itemname" class="w-100">
+                </div>
+
+                <div class="form-group">
+                    <label for="itemdescription">Description: </label>
+                    <textarea name="description" id="itemdescription" rows="2" class="w-100"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="itemprice">Price: </label>
+                    <input type="number" name="price" id="itemprice" class="w-100">
+                </div>
+
+                <div class="form-group">
+                    <label for="itemextras">Extras: </label>
+                    <textarea name="extras" id="itemextras" rows="3" class="w-100"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemoptions">Options: </label>
+                    <textarea name="options" id="itemoptions" rows="3" class="w-100"></textarea>
+                
+                </div>
+
+                <div class="form-group">
+                    <label for="itemfeatured">Featured: </label>
+                    <input type="checkbox" name="featured" id="itemfeatured">
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemvegan">Vegan: </label>
+                    <input type="checkbox" name="vegan" id="itemvegan">
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemvegetarian">Vegetarian: </label>
+                    <input type="checkbox" name="vegetarian" id="itemvegetarian">
+                    
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemglutenoption">Gluten Free Option: </label>
+                    <input type="checkbox" name="glutenoption" id="itemglutenoption">
+                </div>
             </div>
         </div>
     </div>
@@ -40,7 +92,7 @@
     <script src='https://aopenbrier.github.io/munchbistro/assets/js/menu.js'></script>
     <script src='app.js'></script>
     <script type="text/javascript">
- 
+
     </script>
 </body>
 

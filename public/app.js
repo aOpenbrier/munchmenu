@@ -5,7 +5,7 @@ tabplaceholder.innerText = 'Select a Menu Tab'
 tabplaceholder.setAttribute('selected', true)
 document.getElementById('menutabselect').appendChild(tabplaceholder)
 
-fetch('https://www.adamopenbrier.com/munchthai/assets/js/menu.json')
+fetch('https://www.adamopenbrier.com/munchbistro/assets/js/menu.json')
     .then(r => r.json())
     .then(r => {
         menu = r
@@ -47,53 +47,62 @@ function sectionSelect(event) {
         newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
             let itemForm = document.createElement('div')
-            itemForm.className = 'card mb-2 p-2'
+            itemForm.className = 'rounded border shadow mb-3 p-2 bg-white'
             itemForm.innerHTML = `
                     <form>
                     <div class="form-group">
                         <label for="itemname">Name: </label>
-                        <input type="text" name="name" id="itemname" class="w-100" value="${item.name || ""}">
+                        <input type="text" name="name" id="itemname" class="w-100 form-control" value="${item.name || ""}">
                     </div>
 
                     <div class="form-group">
                         <label for="itemdescription">Description: </label>
-                        <textarea name="description" id="itemdescription" rows="2" class="w-100">${item.description || ""}</textarea>
+                        <textarea name="description" id="itemdescription" rows="${item.description ? '2': '1'}" class="w-100 form-control">${item.description || ""}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemprice">Image: </label>
+                        <input type="text" name="image" id="itemimage" class="w-100 form-control" value="${item.image || ""}">
                     </div>
 
                     <div class="form-group">
                         <label for="itemprice">Price: </label>
-                        <input type="number" name="price" id="itemprice" class="w-100" value="${item.price || ""}">
+                        <input type="number" name="price" id="itemprice" class="w-100 form-control" value="${item.price || ""}">
                     </div>
 
                     <div class="form-group">
                         <label for="itemextras">Extras: </label>
-                        <textarea name="extras" id="itemextras" rows="3" class="w-100">${item.extras || ""}</textarea>
+                        <textarea name="extras" id="itemextras" rows="${item.extras ? '3' : '1'}" class="w-100 form-control">${item.extras || ""}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="itemoptions">Options: </label>
-                        <textarea name="options" id="itemoptions" rows="3" class="w-100" >${item.options || ""}</textarea>
+                        <textarea name="options" id="itemoptions" rows="${item.options ? '3' : '1'}" class="w-100 form-control" >${item.options || ""}</textarea>
 
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="itemfeatured">Featured: </label>
+                                <input type="checkbox" name="featured" id="itemfeatured" ${item.featured ? "checked" : ""} >
+                            </div>
 
-                    <div class="form-group">
-                        <label for="itemfeatured">Featured: </label>
-                        <input type="checkbox" name="featured" id="itemfeatured" ${item.featured ? "checked" : ""} >
-                    </div>
+                            <div class="form-group">
+                                <label for="itemglutenoption">Gluten Free Option: </label>
+                                <input type="checkbox" name="glutenoption" id="itemglutenoption" ${item["gf option"] ? "checked" : ""}>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="itemvegan">Vegan: </label>
+                                <input type="checkbox" name="vegan" id="itemvegan" ${item.vegan ? "checked" : ""} >
+                            </div>
 
-                    <div class="form-group">
-                        <label for="itemvegan">Vegan: </label>
-                        <input type="checkbox" name="vegan" id="itemvegan" ${item.vegan ? "checked" : ""} >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="itemvegetarian">Vegetarian: </label>
-                        <input type="checkbox" name="vegetarian" id="itemvegetarian" ${item.vegetarian ? "checked" : ""} >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="itemglutenoption">Gluten Free Option: </label>
-                        <input type="checkbox" name="glutenoption" id="itemglutenoption" ${item["gf option"] ? "checked" : ""}>
+                            <div class="form-group">
+                                <label for="itemvegetarian">Vegetarian: </label>
+                                <input type="checkbox" name="vegetarian" id="itemvegetarian" ${item.vegetarian ? "checked" : ""} >
+                            </div>
+                        </div>
                     </div>
                 </form>`
             document.getElementById('item-list').appendChild(itemForm)

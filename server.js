@@ -8,4 +8,4 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.listen(PORT, () => console.log(`listening at ${PORT}`))
+app.listen(PORT, () => console.log(`listening at localhost:${PORT}`))

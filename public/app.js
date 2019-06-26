@@ -43,9 +43,43 @@ function tabSelect(event) {
 function sectionSelect(event) {
     document.getElementById('forms-container').innerHTML = ''
     if (event.target.value) {
- 
+        let tabForm = document.createElement('div')
+        tabForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        tabForm.innerHTML = `
+        <form>
+            <div class="form-group">
+                <label for="tab-disclaimer-input">Menu Disclaimer: </label>
+                <textarea name="details" id="tab-disclaimer-input" rows="${newMenu[event.target.dataset.tab].disclaimer ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].disclaimer || ""}</textarea>
+            </div>
+            <small>*Displayed at the bottom of current menu tab, after all sections</small>
+        </form>
+        `
+        document.getElementById('forms-container').appendChild(tabForm)
+
+        // section editing forms
+        let sectionForm = document.createElement('div')
+        sectionForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        sectionForm.innerHTML = `
+        <form>
+            <div class="form-group">
+                <label for="section-title-input">Section Title: </label>
+                <input type="text" name="title" id="section-title-input" class="w-100 form-control" value="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"] || ""}">
+            </div>
+            <div class="form-group">
+                <label for="section-details-input">Section Details: </label>
+                <textarea name="details" id="section-details-input" rows="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</textarea>
+            </div>
+        </form>
+        `
+        document.getElementById('forms-container').appendChild(sectionForm)
+
+        
         // list forms for menu-items
         if (newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]){
+        let itemsH = document.createElement('h3')
+        itemsH.innerText = "Detailed Items:"
+        document.getElementById('forms-container').appendChild(itemsH)
+
         newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
             let itemForm = document.createElement('div')
@@ -111,20 +145,22 @@ function sectionSelect(event) {
         })
     }
         // list forms for item-list
+        let itemListH = document.createElement('h3')
+        itemListH.innerText = "Listed Items:"
+        document.getElementById('forms-container').appendChild(itemListH)
         let sectionList = newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section list"]
-        let itemForm = document.createElement('div')
-        itemForm.className = 'rounded border shadow mb-3 p-2 bg-white'
-        itemForm.innerHTML = `
-            <form id="list-form" class="item-form">
+        let listedItemsForm = document.createElement('div')
+        listedItemsForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        listedItemsForm.innerHTML = `
+            <form id="list-form">
 
                 <div class="form-group">
-                    <label for="item-list">Listed Items: </label>
-                    <textarea name="list" id="item-list" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
+                    <label for="item-list-input">Items: </label>
+                    <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
                 </div>
 
             </form>`
-        document.getElementById('forms-container').appendChild(itemForm)
-
+        document.getElementById('forms-container').appendChild(listedItemsForm)
     }
 }
 

@@ -5,7 +5,7 @@ tabplaceholder.innerText = 'Select a Menu Tab'
 tabplaceholder.setAttribute('selected', true)
 document.getElementById('menutabselect').appendChild(tabplaceholder)
 
-fetch('https://www.adamopenbrier.com/munchbistro/assets/js/menu.json')
+fetch('https://www.adamopenbrier.com/munchthai/assets/js/menu.json')
     .then(r => r.json())
     .then(r => {
         menu = r
@@ -21,7 +21,7 @@ fetch('https://www.adamopenbrier.com/munchbistro/assets/js/menu.json')
     .catch(e => console.log(e))
 
 function tabSelect(event) {
-    document.getElementById('item-list').innerHTML = ''
+    document.getElementById('forms-container').innerHTML = ''
     document.getElementById('menusectionselect').innerHTML = ''
     document.getElementById('menusectionselect').dataset.tab = ''
     if (event.target.value) {
@@ -41,9 +41,11 @@ function tabSelect(event) {
 }
 
 function sectionSelect(event) {
-    document.getElementById('item-list').innerHTML = ''
+    document.getElementById('forms-container').innerHTML = ''
     if (event.target.value) {
  
+        // list forms for menu-items
+        if (newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]){
         newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
             let itemForm = document.createElement('div')
@@ -105,8 +107,24 @@ function sectionSelect(event) {
                         </div>
                     </div>
                 </form>`
-            document.getElementById('item-list').appendChild(itemForm)
+            document.getElementById('forms-container').appendChild(itemForm)
         })
+    }
+        // list forms for item-list
+        let sectionList = newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section list"]
+        let itemForm = document.createElement('div')
+        itemForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        itemForm.innerHTML = `
+            <form id="list-form" class="item-form">
+
+                <div class="form-group">
+                    <label for="item-list">Listed Items: </label>
+                    <textarea name="list" id="item-list" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
+                </div>
+
+            </form>`
+        document.getElementById('forms-container').appendChild(itemForm)
+
     }
 }
 

@@ -44,8 +44,10 @@ function sectionSelect(event) {
     document.getElementById('forms-container').innerHTML = ''
     if (event.target.value) {
         let tabForm = document.createElement('div')
-        tabForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        tabForm.className = 'row'
         tabForm.innerHTML = `
+        <div class="col-6">
+        <div class="rounded border shadow mb-3 p-2 bg-white">
         <form>
             <div class="form-group">
                 <label for="tab-disclaimer-input">Menu Disclaimer: </label>
@@ -53,13 +55,24 @@ function sectionSelect(event) {
             </div>
             <small>*Displayed at the bottom of current menu tab, after all sections</small>
         </form>
+        </div>
+        </div>
+        <div class="col-6">
+        <div class="menu shadow mb-3">
+        <div class="menudisclaimer">
+        ${newMenu[event.target.dataset.tab].disclaimer || ""}
+        </div>
+        </div>
+        </div>
         `
         document.getElementById('forms-container').appendChild(tabForm)
 
         // section editing forms
         let sectionForm = document.createElement('div')
-        sectionForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        sectionForm.className = 'row'
         sectionForm.innerHTML = `
+        <div class="col-6">
+        <div class="rounded border shadow mb-3 p-2 bg-white">
         <form>
             <div class="form-group">
                 <label for="section-title-input">Section Title: </label>
@@ -70,6 +83,14 @@ function sectionSelect(event) {
                 <textarea name="details" id="section-details-input" rows="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</textarea>
             </div>
         </form>
+        </div>
+        </div>
+        <div class="col-6">
+        <div class="menu shadow mb-3">
+        <h3 class="sectiontitle">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"]}</h3>
+        <p class="sectiondetails">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</p>
+        </div>
+        </div>
         `
         document.getElementById('forms-container').appendChild(sectionForm)
 
@@ -83,8 +104,10 @@ function sectionSelect(event) {
         newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
             let itemForm = document.createElement('div')
-            itemForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+            itemForm.className = 'row'
             itemForm.innerHTML = `
+                <div class="col-6">
+                <div class="rounded border shadow mb-3 p-2 bg-white">
                     <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form">
                     <div class="form-group">
                         <label for="item-${iIndex}-name">Name: </label>
@@ -140,7 +163,31 @@ function sectionSelect(event) {
                             </div>
                         </div>
                     </div>
-                </form>`
+                </form>
+                </div>
+                </div>
+                <div class="col-6">
+                <div class="menu shadow mb-3">
+                <div class="sectionitem">
+                    ${ item.price ? `<p class="itemprice">${`${item.price.toString().split('.')[1] ? item.price.toFixed(2) : item.price}`}</p>` : '' }
+                    ${ item.name ? `<h5 class="itemname">${item.name}</h5>` : '' }
+                    ${ item.description ? `<p class="itemdesc">${item.description}</p>` : '' }
+                    ${ item["gf option"] ? `<p class="itemdietary">*Gluten-free optional</p>` : '' }
+                    ${ item.vegan ? `<p class="itemdietary">*Vegan</p>` : '' }
+                    ${ item.vegetarian ? `<p class="itemdietary">*Vegetarian</p>` : '' }
+                    ${ item.extras ? `<p class="itemextras">${item.extras}</p>` : '' }
+                    ${ item.options ? `<p class="itemoptions">${item.options}</p>` : '' }
+                    <div class="itemimgwrapper">
+                        ${item.image ? `
+                    <div class="itemimage" style="background-image:url(https://www.adamopenbrier.com/munchthai/assets/images/${item.image})">
+                        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${item.image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                    </div>` : ''}
+                        ${item.featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
+                    </div>
+                </div>
+                </div>
+                </div>
+                `
             document.getElementById('forms-container').appendChild(itemForm)
         })
     }
@@ -150,8 +197,10 @@ function sectionSelect(event) {
         document.getElementById('forms-container').appendChild(itemListH)
         let sectionList = newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section list"]
         let listedItemsForm = document.createElement('div')
-        listedItemsForm.className = 'rounded border shadow mb-3 p-2 bg-white'
+        listedItemsForm.className = 'row'
         listedItemsForm.innerHTML = `
+            <div class="col-6">
+            <div class="rounded border shadow mb-3 p-2 bg-white"
             <form id="list-form">
 
                 <div class="form-group">
@@ -159,7 +208,16 @@ function sectionSelect(event) {
                     <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
                 </div>
 
-            </form>`
+            </form>
+            </div>
+            </div>
+            <div class="col-6">
+            <div class="menu shadow mb-3">
+            <div class="sectionlist">
+                ${sectionList || ""}
+            </div>
+            </div>
+            </div>`
         document.getElementById('forms-container').appendChild(listedItemsForm)
     }
 }

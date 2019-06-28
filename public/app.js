@@ -48,7 +48,7 @@ function sectionSelect(event) {
         tabForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
-        <form>
+        <form id="disclaimer-form" oninput="changeDisclaimer()">
             <div class="form-group">
                 <label for="tab-disclaimer-input">Menu Disclaimer: </label>
                 <textarea name="details" id="tab-disclaimer-input" rows="${newMenu[event.target.dataset.tab].disclaimer ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].disclaimer || ""}</textarea>
@@ -59,7 +59,7 @@ function sectionSelect(event) {
         </div>
         <div class="col-6">
         <div class="menu shadow mb-3">
-        <div class="menudisclaimer">
+        <div id="tab-disclaimer-output" class="menudisclaimer">
         ${newMenu[event.target.dataset.tab].disclaimer || ""}
         </div>
         </div>
@@ -73,7 +73,7 @@ function sectionSelect(event) {
         sectionForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
-        <form>
+        <form id="section-form" oninput="changeSection()">
             <div class="form-group">
                 <label for="section-title-input">Section Title: </label>
                 <input type="text" name="title" id="section-title-input" class="w-100 form-control" value="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"] || ""}">
@@ -87,8 +87,8 @@ function sectionSelect(event) {
         </div>
         <div class="col-6">
         <div class="menu shadow mb-3">
-        <h3 class="sectiontitle">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"]}</h3>
-        <p class="sectiondetails">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</p>
+        <h3 id="section-title-output" class="sectiontitle">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"]}</h3>
+        <p id="section-details-output" class="sectiondetails">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</p>
         </div>
         </div>
         `
@@ -108,7 +108,7 @@ function sectionSelect(event) {
             itemForm.innerHTML = `
                 <div class="col-6">
                 <div class="rounded border shadow mb-3 p-2 bg-white">
-                    <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form">
+                    <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form" oninput="changeItem(${iIndex})">
                     <div class="form-group">
                         <label for="item-${iIndex}-name">Name: </label>
                         <input type="text" name="name" id="item-${iIndex}-name" data-item="${iIndex}" class="w-100 form-control" value="${item.name || ""}">
@@ -168,7 +168,7 @@ function sectionSelect(event) {
                 </div>
                 <div class="col-6">
                 <div class="menu shadow mb-3">
-                <div class="sectionitem">
+                <div id="item-${iIndex}-output" class="sectionitem">
                     ${ item.price ? `<p class="itemprice">${`${item.price.toString().split('.')[1] ? item.price.toFixed(2) : item.price}`}</p>` : '' }
                     ${ item.name ? `<h5 class="itemname">${item.name}</h5>` : '' }
                     ${ item.description ? `<p class="itemdesc">${item.description}</p>` : '' }
@@ -201,7 +201,7 @@ function sectionSelect(event) {
         listedItemsForm.innerHTML = `
             <div class="col-6">
             <div class="rounded border shadow mb-3 p-2 bg-white"
-            <form id="list-form">
+            <form id="list-form" oninput="changeList()">
 
                 <div class="form-group">
                     <label for="item-list-input">Items: </label>
@@ -213,7 +213,7 @@ function sectionSelect(event) {
             </div>
             <div class="col-6">
             <div class="menu shadow mb-3">
-            <div class="sectionlist">
+            <div id="item-list-output" class="sectionlist">
                 ${sectionList || ""}
             </div>
             </div>
@@ -222,15 +222,45 @@ function sectionSelect(event) {
     }
 }
 
+function changeDisclaimer(){
+    document.getElementById('tab-disclaimer-output').innerHTML = document.getElementById('tab-disclaimer-input').value
+}
 
-function clearForm() {
-    document.getElementById("itemname").value = ''
-    document.getElementById("itemdescription").value = ''
-    document.getElementById("itemprice").value = ''
-    document.getElementById("itemextras").value = ''
-    document.getElementById("itemoptions").value = ''
-    document.getElementById("itemfeatured").checked = false
-    document.getElementById("itemvegan").checked = false
-    document.getElementById("itemvegetarian").checked = false
-    document.getElementById("itemglutenoption").checked = false
+function changeSection(){
+    document.getElementById('section-title-output').innerHTML = document.getElementById('section-title-input').value
+    document.getElementById('section-details-output').innerHTML = document.getElementById('section-details-input').value
+}
+
+function changeItem(index){
+    const name = document.getElementById(`item-${index}-name`).value
+    const description = document.getElementById(`item-${index}-description`).value
+    const image = document.getElementById(`item-${index}-image`).value
+    const price = parseInt(document.getElementById(`item-${index}-price`).value)
+    const extras = document.getElementById(`item-${index}-extras`).value
+    const options = document.getElementById(`item-${index}-options`).value
+    const featured = document.getElementById(`item-${index}-featured`).checked
+    const vegan = document.getElementById(`item-${index}-vegan`).checked
+    const vegetarian = document.getElementById(`item-${index}-vegetarian`).checked
+    const glutenOption = document.getElementById(`item-${index}-glutenoption`).checked 
+    document.getElementById(`item-${index}-output`).innerHTML = `
+    ${price ? `<p class="itemprice">${`${price.toString().split('.')[1] ? price.toFixed(2) : price}`}</p>` : ''}
+                    ${ name ? `<h5 class="itemname">${name}</h5>` : ''}
+                    ${ description ? `<p class="itemdesc">${description}</p>` : ''}
+                    ${ glutenOption ? `<p class="itemdietary">*Gluten-free optional</p>` : ''}
+                    ${ vegan ? `<p class="itemdietary">*Vegan</p>` : ''}
+                    ${ vegetarian ? `<p class="itemdietary">*Vegetarian</p>` : ''}
+                    ${ extras ? `<p class="itemextras">${extras}</p>` : ''}
+                    ${ options ? `<p class="itemoptions">${options}</p>` : ''}
+                    <div class="itemimgwrapper">
+                        ${image ? `
+                    <div class="itemimage" style="background-image:url(https://www.adamopenbrier.com/munchthai/assets/images/${image})">
+                        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                    </div>` : ''}
+                        ${featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
+    `
+
+}
+
+function changeList(){
+    document.getElementById('item-list-output').innerHTML = document.getElementById('item-list-input').value
 }

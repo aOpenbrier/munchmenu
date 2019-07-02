@@ -223,19 +223,22 @@ function sectionSelect(event) {
 }
 
 function changeDisclaimer(){
+    document.getElementById('saved').classList.remove('saved')
     document.getElementById('tab-disclaimer-output').innerHTML = document.getElementById('tab-disclaimer-input').value
 }
 
 function changeSection(){
+    document.getElementById('saved').classList.remove('saved')
     document.getElementById('section-title-output').innerHTML = document.getElementById('section-title-input').value
     document.getElementById('section-details-output').innerHTML = document.getElementById('section-details-input').value
 }
 
 function changeItem(index){
+    document.getElementById('saved').classList.remove('saved')
     const name = document.getElementById(`item-${index}-name`).value
     const description = document.getElementById(`item-${index}-description`).value
     const image = document.getElementById(`item-${index}-image`).value
-    const price = parseInt(document.getElementById(`item-${index}-price`).value)
+    const price = parseFloat(document.getElementById(`item-${index}-price`).value)
     const extras = document.getElementById(`item-${index}-extras`).value
     const options = document.getElementById(`item-${index}-options`).value
     const featured = document.getElementById(`item-${index}-featured`).checked
@@ -262,5 +265,32 @@ function changeItem(index){
 }
 
 function changeList(){
+    document.getElementById('saved').classList.remove('saved')
     document.getElementById('item-list-output').innerHTML = document.getElementById('item-list-input').value
+}
+
+function save(){
+    document.getElementById('saved').classList.add('saved')
+    event.preventDefault()
+    const tab = document.getElementById('menusectionselect').dataset.tab
+    const sect = document.getElementById('menusectionselect').value
+    newMenu[tab].sections[sect].disclaimer = document.getElementById('tab-disclaimer-input').value
+    newMenu[tab].sections[sect]["section title"] = document.getElementById('section-title-input').value
+    newMenu[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
+
+    for (let i = 0; i < document.getElementsByClassName('item-form').length; i++){
+        newMenu[tab].sections[sect]["section items"][i] = {
+            name: document.getElementById(`item-${i}-name`).value,
+            description: document.getElementById(`item-${i}-description`).value,
+            image: document.getElementById(`item-${i}-image`).value,
+            price: parseFloat(document.getElementById(`item-${i}-price`).value),
+            extras: document.getElementById(`item-${i}-extras`).value,
+            options: document.getElementById(`item-${i}-options`).value,
+            featured: document.getElementById(`item-${i}-featured`).checked,
+            vegan: document.getElementById(`item-${i}-vegan`).checked,
+            vegetarian: document.getElementById(`item-${i}-vegetarian`).checked,
+            "gf option": document.getElementById(`item-${i}-glutenoption`).checked,
+        } 
+    }
+    newMenu[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
 }

@@ -12,26 +12,39 @@
 
 <body class="bg-light">
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-6 pt-2">
                 <!-- Editing forms -->
-                    <div class="bg-danger text-white py-2 mb-2 rounded">
-                        <div class="form-group row mx-2">
-                            <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
-                            <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
-                            </select>
-                        </div>
-                        <div class="form-group row mx-2 mb-0">
-                                <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
-                                <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
-                                </select>
+                <form class="bg-danger text-white py-2 mb-2 rounded">
+                    <div class="form-group row mx-2">
+                        <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
+                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        </select>
+                    </div>
+                    <div class="form-group row mx-2 mb-0">
+                        <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
+                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="fixed-bottom">
+            <div id="saved" class="saved">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center py-2">
+                            <a class="btn btn-primary text-white" onclick="save()">Save</a>
                         </div>
                     </div>
                 </div>
             </div>
-                        <div id="forms-container">
-    
-                        </div>
+        </div>
+        <div id="forms-container" class='pb-5'>
+
+        </div>
 
     </div>
 

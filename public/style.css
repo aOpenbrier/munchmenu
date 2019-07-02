@@ -1,3 +1,7 @@
+.saved {
+    display: none;
+}
+
 .menu {
     background-color: white;
     background-image: url(./background.png);
@@ -10,6 +14,11 @@
     padding: .5em;
     margin-bottom: .5em;
     font-family: "Roboto Slab", serif;
+}
+
+.sectiondetails {
+    text-align: center;
+    margin-bottom: 1em;
 }
 
 .sectionitem {

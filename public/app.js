@@ -274,7 +274,7 @@ function save(){
     event.preventDefault()
     const tab = document.getElementById('menusectionselect').dataset.tab
     const sect = document.getElementById('menusectionselect').value
-    newMenu[tab].sections[sect].disclaimer = document.getElementById('tab-disclaimer-input').value
+    newMenu[tab].disclaimer = document.getElementById('tab-disclaimer-input').value
     newMenu[tab].sections[sect]["section title"] = document.getElementById('section-title-input').value
     newMenu[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
 
@@ -293,4 +293,16 @@ function save(){
         } 
     }
     newMenu[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
+    
+    fetch('/menu', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify(newMenu)
+    })
+    .then(r => {
+        console.log(r)
+    })
+    .catch(e => { console.error(e) })
 }

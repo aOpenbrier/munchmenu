@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munch Thai Menu Edit Tool</title>
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB' crossorigin='anonymous'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="bg-light">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-6 pt-2">
+                <!-- Editing forms -->
+                <form class="bg-danger text-white py-2 mb-2 rounded">
+                    <div class="form-group row mx-2">
+                        <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
+                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        </select>
+                    </div>
+                    <div class="form-group row mx-2 mb-0">
+                        <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
+                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="fixed-bottom">
+            <div id="saved" class="saved">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center py-2">
+                            <a class="btn btn-primary text-white" onclick="save()">Save</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="forms-container" class='pb-5'>
+
+        </div>
+
+    </div>
+
+    <script src='https://code.jquery.com/jquery-3.3.1.js' integrity='sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=' crossorigin='anonymous'></script>
+    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js' integrity='sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T' crossorigin='anonymous'></script>
+    <script src='app.js'></script>
+</body>
+
+</html>

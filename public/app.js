@@ -1,6 +1,6 @@
 let menuEdit
 
-function sourceSelect(event){
+function sourceSelect(event) {
     if (event && event.target.value) {
         document.getElementById('menu-selection').innerHTML = `
                     <div class="form-group row mx-2">
@@ -110,18 +110,22 @@ function sectionSelect(event) {
         `
         document.getElementById('forms-container').appendChild(sectionForm)
 
-        
+
         // list forms for menu-items
-        if (menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]){
-        let itemsH = document.createElement('h3')
-        itemsH.innerText = "Detailed Items:"
-        document.getElementById('forms-container').appendChild(itemsH)
+        if (menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]) {
+            let itemsH = document.createElement('h3')
+            itemsH.innerHTML = 'Detailed Items: <a class="text-white btn btn-primary" onclick="addItem()">Add Item</a>'
+            document.getElementById('forms-container').appendChild(itemsH)
+            
+            let detailedItems = document.createElement('div')
+            detailedItems.id = 'detailed-items'
+            document.getElementById('forms-container').appendChild(detailedItems)
 
-        menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
+            menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
-            let itemForm = document.createElement('div')
-            itemForm.className = 'row align-items-center'
-            itemForm.innerHTML = `
+                let itemForm = document.createElement('div')
+                itemForm.className = 'row align-items-center'
+                itemForm.innerHTML = `
                 <div class="col-6">
                 <div class="rounded border shadow mb-3 p-2 bg-white">
                     <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form" oninput="changeItem(${iIndex})">
@@ -132,7 +136,7 @@ function sectionSelect(event) {
 
                     <div class="form-group">
                         <label for="item-${iIndex}-description">Description: </label>
-                        <textarea name="description" id="item-${iIndex}-description" data-item="${iIndex}" rows="${item.description ? '2': '1'}" class="w-100 form-control">${item.description || ""}</textarea>
+                        <textarea name="description" id="item-${iIndex}-description" data-item="${iIndex}" rows="${item.description ? '2' : '1'}" class="w-100 form-control">${item.description || ""}</textarea>
                     </div>
 
                     <div class="form-group">
@@ -185,28 +189,15 @@ function sectionSelect(event) {
                 <div class="col-6">
                 <div class="menu shadow mb-3">
                 <div id="item-${iIndex}-output" class="sectionitem">
-                    ${ item.price ? `<p class="itemprice">${`${item.price.toString().split('.')[1] ? item.price.toFixed(2) : item.price}`}</p>` : '' }
-                    ${ item.name ? `<h5 class="itemname">${item.name}</h5>` : '' }
-                    ${ item.description ? `<p class="itemdesc">${item.description}</p>` : '' }
-                    ${ item["gf option"] ? `<p class="itemdietary">*Gluten-free optional</p>` : '' }
-                    ${ item.vegan ? `<p class="itemdietary">*Vegan</p>` : '' }
-                    ${ item.vegetarian ? `<p class="itemdietary">*Vegetarian</p>` : '' }
-                    ${ item.extras ? `<p class="itemextras">${item.extras}</p>` : '' }
-                    ${ item.options ? `<p class="itemoptions">${item.options}</p>` : '' }
-                    <div class="itemimgwrapper">
-                        ${item.image ? `
-                    <div class="itemimage" style="background-image:url(https://www.munchthai.com/assets/images/${item.image})">
-                        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${item.image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
-                    </div>` : ''}
-                        ${item.featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
-                    </div>
+
                 </div>
                 </div>
                 </div>
                 `
-            document.getElementById('forms-container').appendChild(itemForm)
-        })
-    }
+                document.getElementById('detailed-items').appendChild(itemForm)
+                updatePreview(iIndex)
+            })
+        }
         // list forms for item-list
         let itemListH = document.createElement('h3')
         itemListH.innerText = "Listed Items:"
@@ -238,19 +229,23 @@ function sectionSelect(event) {
     }
 }
 
-function changeDisclaimer(){
+function changeDisclaimer() {
     document.getElementById('saved').classList.remove('saved')
     document.getElementById('tab-disclaimer-output').innerHTML = document.getElementById('tab-disclaimer-input').value
 }
 
-function changeSection(){
+function changeSection() {
     document.getElementById('saved').classList.remove('saved')
     document.getElementById('section-title-output').innerHTML = document.getElementById('section-title-input').value
     document.getElementById('section-details-output').innerHTML = document.getElementById('section-details-input').value
 }
 
-function changeItem(index){
+function changeItem(index) {
     document.getElementById('saved').classList.remove('saved')
+    updatePreview(index)
+}
+
+function updatePreview(index) {
     const name = document.getElementById(`item-${index}-name`).value
     const description = document.getElementById(`item-${index}-description`).value
     const image = document.getElementById(`item-${index}-image`).value
@@ -260,7 +255,7 @@ function changeItem(index){
     const featured = document.getElementById(`item-${index}-featured`).checked
     const vegan = document.getElementById(`item-${index}-vegan`).checked
     const vegetarian = document.getElementById(`item-${index}-vegetarian`).checked
-    const glutenOption = document.getElementById(`item-${index}-glutenoption`).checked 
+    const glutenOption = document.getElementById(`item-${index}-glutenoption`).checked
     document.getElementById(`item-${index}-output`).innerHTML = `
     ${price ? `<p class="itemprice">${`${price.toString().split('.')[1] ? price.toFixed(2) : price}`}</p>` : ''}
                     ${ name ? `<h5 class="itemname">${name}</h5>` : ''}
@@ -280,9 +275,92 @@ function changeItem(index){
 
 }
 
-function changeList(){
+function changeList() {
     document.getElementById('saved').classList.remove('saved')
     document.getElementById('item-list-output').innerHTML = document.getElementById('item-list-input').value
+}
+
+function addItem() {
+    const iIndex = document.getElementsByClassName('item-form').length
+    let itemForm = document.createElement('div')
+    itemForm.className = 'row align-items-center'
+    itemForm.innerHTML = `
+                <div class="col-6">
+                <div class="rounded border shadow mb-3 p-2 bg-white">
+                    <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form" oninput="changeItem(${iIndex})">
+                    <div class="form-group">
+                        <label for="item-${iIndex}-name">Name: </label>
+                        <input type="text" name="name" id="item-${iIndex}-name" data-item="${iIndex}" class="w-100 form-control" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-${iIndex}-description">Description: </label>
+                        <textarea name="description" id="item-${iIndex}-description" data-item="${iIndex}" rows="1" class="w-100 form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-${iIndex}-price">Image: </label>
+                        <input type="text" name="image" id="item-${iIndex}-image" data-item="${iIndex}" class="w-100 form-control" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-${iIndex}-price">Price: </label>
+                        <input type="number" name="price" id="item-${iIndex}-price" data-item="${iIndex}" class="w-100 form-control" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-${iIndex}-extras">Extras: </label>
+                        <textarea name="extras" id="item-${iIndex}-extras" data-item="${iIndex}" rows="1" class="w-100 form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-${iIndex}-options">Options: </label>
+                        <textarea name="options" id="item-${iIndex}-options" data-item="${iIndex}" rows="1" class="w-100 form-control" ></textarea>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="item-${iIndex}-featured">Featured: </label>
+                                <input type="checkbox" name="featured" id="item-${iIndex}-featured" data-item="${iIndex}" >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="item-${iIndex}-glutenoption">Gluten Free Option: </label>
+                                <input type="checkbox" name="glutenoption" id="item-${iIndex}-glutenoption" data-item="${iIndex}" >
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="item-${iIndex}-vegan">Vegan: </label>
+                                <input type="checkbox" name="vegan" id="item-${iIndex}-vegan" data-item="${iIndex}" >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="item-${iIndex}-vegetarian">Vegetarian: </label>
+                                <input type="checkbox" name="vegetarian" id="item-${iIndex}-vegetarian" data-item="${iIndex}" >
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                </div>
+                <div class="col-6">
+                <div class="menu shadow mb-3">
+                <div id="item-${iIndex}-output" class="sectionitem">
+
+                </div>
+                </div>
+                </div>
+                `
+    document.getElementById('detailed-items').appendChild(itemForm)
+    updatePreview(iIndex)
+    window.scrollTo({
+        top: document.getElementById(`item-${iIndex}-form`).offsetParent.offsetTop,
+        left: 0,
+        behavior: 'smooth'
+    });
+    
 }
 
 function save(){
@@ -294,7 +372,7 @@ function save(){
     menuEdit[tab].sections[sect]["section title"] = document.getElementById('section-title-input').value
     menuEdit[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
 
-    for (let i = 0; i < document.getElementsByClassName('item-form').length; i++){
+    for (let i = 0; i < document.getElementsByClassName('item-form').length; i++) {
         menuEdit[tab].sections[sect]["section items"][i] = {
             name: document.getElementById(`item-${i}-name`).value,
             description: document.getElementById(`item-${i}-description`).value,
@@ -306,10 +384,10 @@ function save(){
             vegan: document.getElementById(`item-${i}-vegan`).checked,
             vegetarian: document.getElementById(`item-${i}-vegetarian`).checked,
             "gf option": document.getElementById(`item-${i}-glutenoption`).checked,
-        } 
+        }
     }
     menuEdit[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
-    
+
     fetch('/menu', {
         method: 'PUT',
         headers: {
@@ -317,8 +395,8 @@ function save(){
         },
         body: JSON.stringify(menuEdit)
     })
-    .then(r => {
-        console.log(r)
-    })
-    .catch(e => { console.error(e) })
+        .then(r => {
+            console.log(r)
+        })
+        .catch(e => { console.error(e) })
 }

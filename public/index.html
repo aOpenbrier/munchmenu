@@ -21,16 +21,17 @@
                         <label for="menusourceselect" class="col-4 col-form-label ">Menu Source: </label>
                         <select name="tab" id="menusourceselect" class='form-control col-8' onchange="sourceSelect(event)">
                             <option value="" selected="true">Select a Source</option>
-                            <option value="/munchthaimenu">web: munchthai.com/assets/js/menu.json</option>
-                            <option value="/menu">file: munchmenu/menu/menu.json</option>
+                            <option value="/munchthaimenu">web: munchthai.com/assets/js/</option>
+                            <option value="/menu">local file: publish/assets/js/</option>
                         </select>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="fixed-bottom">
+        <div class="fixed-top">
             <div id="saved" class="saved">
                 <div class="row">
+                    <div class="col-6"></div>
                     <div class="col-6">
                         <div class="text-center py-2">
                             <a class="btn btn-primary text-white" onclick="save()">Save</a>

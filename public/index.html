@@ -16,18 +16,15 @@
         <div class="row">
             <div class="col-6 pt-2">
                 <!-- Editing forms -->
-                <form class="bg-danger text-white py-2 mb-2 rounded">
+                <form id="menu-selection" class="bg-danger text-white py-2 mb-2 rounded">
                     <div class="form-group row mx-2">
-                        <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
-                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        <label for="menusourceselect" class="col-4 col-form-label ">Menu Source: </label>
+                        <select name="tab" id="menusourceselect" class='form-control col-8' onchange="sourceSelect(event)">
+                            <option value="" selected="true">Select a Source</option>
+                            <option value="/munchthaimenu">web: munchthai.com/assets/js/menu.json</option>
+                            <option value="/menu">file: munchmenu/menu/menu.json</option>
                         </select>
                     </div>
-                    <div class="form-group row mx-2 mb-0">
-                        <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
-                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
-                        </select>
-                    </div>
-
                 </form>
             </div>
         </div>

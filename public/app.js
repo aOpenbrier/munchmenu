@@ -1,24 +1,40 @@
-let menu, newMenu
-let tabplaceholder = document.createElement('option')
-tabplaceholder.value = ''
-tabplaceholder.innerText = 'Select a Menu Tab'
-tabplaceholder.setAttribute('selected', true)
-document.getElementById('menutabselect').appendChild(tabplaceholder)
+let menuEdit
 
-fetch('https://www.adamopenbrier.com/munchthai/assets/js/menu.json')
-    .then(r => r.json())
-    .then(r => {
-        menu = r
-        newMenu = r
-        console.log(r)
-        r.forEach((tab, tabIndex) => {
-            let taboption = document.createElement('option')
-            taboption.value = tabIndex
-            taboption.innerText = tab.id
-            document.getElementById('menutabselect').appendChild(taboption)
-        })
-    })
-    .catch(e => console.log(e))
+function sourceSelect(event){
+    if (event && event.target.value) {
+        document.getElementById('menu-selection').innerHTML = `
+                    <div class="form-group row mx-2">
+                        <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
+                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        </select>
+                    </div>
+                    <div class="form-group row mx-2 mb-0">
+                        <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
+                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
+                        </select>
+                    </div>`
+        let tabplaceholder = document.createElement('option')
+        tabplaceholder.value = ''
+        tabplaceholder.innerText = 'Select a Menu Tab'
+        tabplaceholder.setAttribute('selected', true)
+        document.getElementById('menutabselect').appendChild(tabplaceholder)
+
+        console.log(event.target.value)
+        fetch(event.target.value)
+            .then(r => r.json())
+            .then(r => {
+                menuEdit = r
+
+                r.forEach((tab, tabIndex) => {
+                    let taboption = document.createElement('option')
+                    taboption.value = tabIndex
+                    taboption.innerText = tab.id
+                    document.getElementById('menutabselect').appendChild(taboption)
+                })
+            })
+            .catch(e => console.log(e))
+    }
+}
 
 function tabSelect(event) {
     document.getElementById('forms-container').innerHTML = ''
@@ -31,7 +47,7 @@ function tabSelect(event) {
         selectplaceholder.innerText = 'Select a Menu Section'
         selectplaceholder.setAttribute('selected', true)
         document.getElementById('menusectionselect').appendChild(selectplaceholder)
-        newMenu[event.target.value].sections.forEach((section, sIndex) => {
+        menuEdit[event.target.value].sections.forEach((section, sIndex) => {
             let option = document.createElement('option')
             option.value = sIndex
             option.innerText = section["section title"]
@@ -44,14 +60,14 @@ function sectionSelect(event) {
     document.getElementById('forms-container').innerHTML = ''
     if (event.target.value) {
         let tabForm = document.createElement('div')
-        tabForm.className = 'row'
+        tabForm.className = 'row align-items-center'
         tabForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
         <form id="disclaimer-form" oninput="changeDisclaimer()">
             <div class="form-group">
                 <label for="tab-disclaimer-input">Menu Disclaimer: </label>
-                <textarea name="details" id="tab-disclaimer-input" rows="${newMenu[event.target.dataset.tab].disclaimer ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].disclaimer || ""}</textarea>
+                <textarea name="details" id="tab-disclaimer-input" rows="${menuEdit[event.target.dataset.tab].disclaimer ? '2' : '1'}" class="w-100 form-control">${menuEdit[event.target.dataset.tab].disclaimer || ""}</textarea>
             </div>
             <small>*Displayed at the bottom of current menu tab, after all sections</small>
         </form>
@@ -60,7 +76,7 @@ function sectionSelect(event) {
         <div class="col-6">
         <div class="menu shadow mb-3">
         <div id="tab-disclaimer-output" class="menudisclaimer">
-        ${newMenu[event.target.dataset.tab].disclaimer || ""}
+        ${menuEdit[event.target.dataset.tab].disclaimer || ""}
         </div>
         </div>
         </div>
@@ -69,26 +85,26 @@ function sectionSelect(event) {
 
         // section editing forms
         let sectionForm = document.createElement('div')
-        sectionForm.className = 'row'
+        sectionForm.className = 'row align-items-center'
         sectionForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
         <form id="section-form" oninput="changeSection()">
             <div class="form-group">
                 <label for="section-title-input">Section Title: </label>
-                <input type="text" name="title" id="section-title-input" class="w-100 form-control" value="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"] || ""}">
+                <input type="text" name="title" id="section-title-input" class="w-100 form-control" value="${menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"] || ""}">
             </div>
             <div class="form-group">
                 <label for="section-details-input">Section Details: </label>
-                <textarea name="details" id="section-details-input" rows="${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] ? '2' : '1'}" class="w-100 form-control">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</textarea>
+                <textarea name="details" id="section-details-input" rows="${menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] ? '2' : '1'}" class="w-100 form-control">${menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</textarea>
             </div>
         </form>
         </div>
         </div>
         <div class="col-6">
         <div class="menu shadow mb-3">
-        <h3 id="section-title-output" class="sectiontitle">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"]}</h3>
-        <p id="section-details-output" class="sectiondetails">${newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</p>
+        <h3 id="section-title-output" class="sectiontitle">${menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section title"]}</h3>
+        <p id="section-details-output" class="sectiondetails">${menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section details"] || ""}</p>
         </div>
         </div>
         `
@@ -96,15 +112,15 @@ function sectionSelect(event) {
 
         
         // list forms for menu-items
-        if (newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]){
+        if (menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"]){
         let itemsH = document.createElement('h3')
         itemsH.innerText = "Detailed Items:"
         document.getElementById('forms-container').appendChild(itemsH)
 
-        newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
+        menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section items"].forEach((item, iIndex) => {
 
             let itemForm = document.createElement('div')
-            itemForm.className = 'row'
+            itemForm.className = 'row align-items-center'
             itemForm.innerHTML = `
                 <div class="col-6">
                 <div class="rounded border shadow mb-3 p-2 bg-white">
@@ -179,7 +195,7 @@ function sectionSelect(event) {
                     ${ item.options ? `<p class="itemoptions">${item.options}</p>` : '' }
                     <div class="itemimgwrapper">
                         ${item.image ? `
-                    <div class="itemimage" style="background-image:url(https://www.adamopenbrier.com/munchthai/assets/images/${item.image})">
+                    <div class="itemimage" style="background-image:url(https://www.munchthai.com/assets/images/${item.image})">
                         <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${item.image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                     </div>` : ''}
                         ${item.featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
@@ -195,9 +211,9 @@ function sectionSelect(event) {
         let itemListH = document.createElement('h3')
         itemListH.innerText = "Listed Items:"
         document.getElementById('forms-container').appendChild(itemListH)
-        let sectionList = newMenu[event.target.dataset.tab].sections[parseInt(event.target.value)]["section list"]
+        let sectionList = menuEdit[event.target.dataset.tab].sections[parseInt(event.target.value)]["section list"]
         let listedItemsForm = document.createElement('div')
-        listedItemsForm.className = 'row'
+        listedItemsForm.className = 'row align-items-center'
         listedItemsForm.innerHTML = `
             <div class="col-6">
             <div class="rounded border shadow mb-3 p-2 bg-white"
@@ -256,7 +272,7 @@ function changeItem(index){
                     ${ options ? `<p class="itemoptions">${options}</p>` : ''}
                     <div class="itemimgwrapper">
                         ${image ? `
-                    <div class="itemimage" style="background-image:url(https://www.adamopenbrier.com/munchthai/assets/images/${image})">
+                    <div class="itemimage" style="background-image:url(https://www.munchthai.com/assets/images/${image})">
                         <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                     </div>` : ''}
                         ${featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
@@ -274,12 +290,12 @@ function save(){
     event.preventDefault()
     const tab = document.getElementById('menusectionselect').dataset.tab
     const sect = document.getElementById('menusectionselect').value
-    newMenu[tab].disclaimer = document.getElementById('tab-disclaimer-input').value
-    newMenu[tab].sections[sect]["section title"] = document.getElementById('section-title-input').value
-    newMenu[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
+    menuEdit[tab].disclaimer = document.getElementById('tab-disclaimer-input').value
+    menuEdit[tab].sections[sect]["section title"] = document.getElementById('section-title-input').value
+    menuEdit[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
 
     for (let i = 0; i < document.getElementsByClassName('item-form').length; i++){
-        newMenu[tab].sections[sect]["section items"][i] = {
+        menuEdit[tab].sections[sect]["section items"][i] = {
             name: document.getElementById(`item-${i}-name`).value,
             description: document.getElementById(`item-${i}-description`).value,
             image: document.getElementById(`item-${i}-image`).value,
@@ -292,14 +308,14 @@ function save(){
             "gf option": document.getElementById(`item-${i}-glutenoption`).checked,
         } 
     }
-    newMenu[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
+    menuEdit[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
     
     fetch('/menu', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
-        body: JSON.stringify(newMenu)
+        body: JSON.stringify(menuEdit)
     })
     .then(r => {
         console.log(r)

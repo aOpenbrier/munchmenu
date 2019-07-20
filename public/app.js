@@ -238,6 +238,21 @@ function itemFormHtml(item, index) {
     return itemForm
 }
 
+function itemFormValues(i) {
+    return {
+        name: document.getElementById(`item-${i}-name`).value,
+        description: document.getElementById(`item-${i}-description`).value,
+        image: document.getElementById(`item-${i}-image`).value,
+        price: parseFloat(document.getElementById(`item-${i}-price`).value),
+        extras: document.getElementById(`item-${i}-extras`).value,
+        options: document.getElementById(`item-${i}-options`).value,
+        featured: document.getElementById(`item-${i}-featured`).checked,
+        vegan: document.getElementById(`item-${i}-vegan`).checked,
+        vegetarian: document.getElementById(`item-${i}-vegetarian`).checked,
+        "gf option": document.getElementById(`item-${i}-glutenoption`).checked,
+    }
+}
+
 function changeDisclaimer() {
 
     savedEl.classList.remove('saved')
@@ -258,33 +273,24 @@ function changeItem(index) {
 }
 
 function updatePreview(index) {
-    const name = document.getElementById(`item-${index}-name`).value
-    const description = document.getElementById(`item-${index}-description`).value
-    const image = document.getElementById(`item-${index}-image`).value
-    const price = parseFloat(document.getElementById(`item-${index}-price`).value)
-    const extras = document.getElementById(`item-${index}-extras`).value
-    const options = document.getElementById(`item-${index}-options`).value
-    const featured = document.getElementById(`item-${index}-featured`).checked
-    const vegan = document.getElementById(`item-${index}-vegan`).checked
-    const vegetarian = document.getElementById(`item-${index}-vegetarian`).checked
-    const glutenOption = document.getElementById(`item-${index}-glutenoption`).checked
-    document.getElementById(`item-${index}-output`).innerHTML = `
-    ${price ? `<p class="itemprice">${`${price.toString().split('.')[1] ? price.toFixed(2) : price}`}</p>` : ''}
-                    ${ name ? `<h5 class="itemname">${name}</h5>` : ''}
-                    ${ description ? `<p class="itemdesc">${description}</p>` : ''}
-                    ${ glutenOption ? `<p class="itemdietary">*Gluten-free optional</p>` : ''}
-                    ${ vegan ? `<p class="itemdietary">*Vegan</p>` : ''}
-                    ${ vegetarian ? `<p class="itemdietary">*Vegetarian</p>` : ''}
-                    ${ extras ? `<p class="itemextras">${extras}</p>` : ''}
-                    ${ options ? `<p class="itemoptions">${options}</p>` : ''}
-                    <div class="itemimgwrapper">
-                        ${image ? `
-                    <div class="itemimage" style="background-image:url(https://www.munchthai.com/assets/images/${image})">
-                        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
-                    </div>` : ''}
-                        ${featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
-    `
+    const item = itemFormValues(index)
 
+    document.getElementById(`item-${index}-output`).innerHTML = `
+    ${item.price ? `<p class="itemprice">${`${item.price.toString().split('.')[1] ? item.price.toFixed(2) : item.price}`}</p>` : ''}
+                    ${item.name ? `<h5 class="itemname">${item.name}</h5>` : ''}
+                    ${item.description ? `<p class="itemdesc">${item.description}</p>` : ''}
+                    ${item['gf option'] ? `<p class="itemdietary">*Gluten-free optional</p>` : ''}
+                    ${item.vegan ? `<p class="itemdietary">*Vegan</p>` : ''}
+                    ${item.vegetarian ? `<p class="itemdietary">*Vegetarian</p>` : ''}
+                    ${item.extras ? `<p class="itemextras">${item.extras}</p>` : ''}
+                    ${item.options ? `<p class="itemoptions">${item.options}</p>` : ''}
+                    <div class="itemimgwrapper">
+                        ${item.image ? `
+                    <div class="itemimage" style="background-image:url(https://www.munchthai.com/assets/images/${item.image})">
+                        <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwww.munchthai.com%2Fmenu%2F${item.image.split('.')[0]}.html&layout=button&size=small&width=59&height=20&appId" width="59" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                    </div>` : ''}
+                        ${item.featured ? `<p class="itemfeatured">FEATURED</p>` : ''}
+    `
 }
 
 function changeList() {
@@ -299,11 +305,7 @@ function addItem() {
     let itemForm = itemFormHtml(item, index)
     document.getElementById('detailed-items').appendChild(itemForm)
     updatePreview(index)
-    window.scrollTo({
-        top: document.getElementById(`item-${index}-form`).offsetParent.offsetTop,
-        left: 0,
-        behavior: 'smooth'
-    });
+    document.getElementById(`item-${index}-form`).scrollIntoView()
 }
 
 function deleteItem(event) {
@@ -311,31 +313,24 @@ function deleteItem(event) {
     const elem = document.getElementById(`row-${index}`)
     if (confirm("Delete Item?")) {
         savedEl.classList.remove('saved')
-        elem.parentNode.removeChild(elem)
-        if (index < document.getElementsByClassName('item-form').length){
-            // shift index of following forms -1
-            for (let i = index + 1; i <= document.getElementsByClassName('item-form').length; i++){
-                const item = {
-                    name: document.getElementById(`item-${i}-name`).value,
-                    description: document.getElementById(`item-${i}-description`).value,
-                    image: document.getElementById(`item-${i}-image`).value,
-                    price: parseFloat(document.getElementById(`item-${i}-price`).value),
-                    extras: document.getElementById(`item-${i}-extras`).value,
-                    options: document.getElementById(`item-${i}-options`).value,
-                    featured: document.getElementById(`item-${i}-featured`).checked,
-                    vegan: document.getElementById(`item-${i}-vegan`).checked,
-                    vegetarian: document.getElementById(`item-${i}-vegetarian`).checked,
-                    "gf option": document.getElementById(`item-${i}-glutenoption`).checked
-                }
-                document.getElementById(`row-${i}`).parentNode.removeChild(document.getElementById(`row-${i}`))
-                let itemForm = itemFormHtml(item, i-1)
-                document.getElementById('detailed-items').appendChild(itemForm)
-                updatePreview(i-1)
 
+            elem.parentNode.removeChild(elem)
+            if (index < document.getElementsByClassName('item-form').length) {
+                // shift index of following forms -1
+                for (let i = index + 1; i <= document.getElementsByClassName('item-form').length; i++) {
+                    const item = itemFormValues(i)
+
+                    document.getElementById(`row-${i}`).parentNode.removeChild(document.getElementById(`row-${i}`))
+                    let itemForm = itemFormHtml(item, i - 1)
+                    document.getElementById('detailed-items').appendChild(itemForm)
+                    updatePreview(i - 1)
+                }
             }
-        }
+        
+
     }
 }
+
 function save() {
     savedEl.classList.add('saved')
     event.preventDefault()
@@ -346,18 +341,7 @@ function save() {
     menuEdit[tab].sections[sect]["section details"] = document.getElementById('section-details-input').value
 
     for (let i = 0; i < document.getElementsByClassName('item-form').length; i++) {
-        menuEdit[tab].sections[sect]["section items"][i] = {
-            name: document.getElementById(`item-${i}-name`).value,
-            description: document.getElementById(`item-${i}-description`).value,
-            image: document.getElementById(`item-${i}-image`).value,
-            price: parseFloat(document.getElementById(`item-${i}-price`).value),
-            extras: document.getElementById(`item-${i}-extras`).value,
-            options: document.getElementById(`item-${i}-options`).value,
-            featured: document.getElementById(`item-${i}-featured`).checked,
-            vegan: document.getElementById(`item-${i}-vegan`).checked,
-            vegetarian: document.getElementById(`item-${i}-vegetarian`).checked,
-            "gf option": document.getElementById(`item-${i}-glutenoption`).checked,
-        }
+        menuEdit[tab].sections[sect]["section items"][i] = itemFormValues(i)
     }
     menuEdit[tab].sections[sect]['section list'] = document.getElementById('item-list-input').value
 

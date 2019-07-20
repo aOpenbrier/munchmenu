@@ -122,6 +122,7 @@ function sectionSelect() {
             menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section items"].forEach((item, index) => {
                 let itemForm = itemFormHtml(item, index)
                 document.getElementById('detailed-items').appendChild(itemForm)
+                itemForm.classList.add('added')
                 updatePreview(index)
             })
         }
@@ -303,6 +304,7 @@ function addItem() {
     const item = {}
     const index = document.getElementsByClassName('item-form').length
     let itemForm = itemFormHtml(item, index)
+    itemForm.classList.add('added')
     document.getElementById('detailed-items').appendChild(itemForm)
     updatePreview(index)
     document.getElementById(`item-${index}-form`).scrollIntoView()
@@ -313,10 +315,22 @@ function deleteItem(event) {
     const elem = document.getElementById(`row-${index}`)
     if (confirm("Delete Item?")) {
         savedEl.classList.remove('saved')
+        elem.classList.add('deleted')
+        // animate row height to 50%
+        const originalHt = elem.clientHeight
+        function reduceHt() {
+            elem.style.height = (elem.clientHeight - (originalHt / 20)) + 'px'
+            console.log(elem.clientHeight + " - " + (originalHt / 20) + 'px = ' + (elem.clientHeight - (originalHt / 40)) + 'px')
+        }
+        let setInt = setInterval(reduceHt, 20)
 
+        // Delay for animation
+        setTimeout(() => {
+            clearInterval(setInt)
+            // delete selected form row
             elem.parentNode.removeChild(elem)
             if (index < document.getElementsByClassName('item-form').length) {
-                // shift index of following forms -1
+                // shift index of any following forms -1
                 for (let i = index + 1; i <= document.getElementsByClassName('item-form').length; i++) {
                     const item = itemFormValues(i)
 
@@ -326,7 +340,7 @@ function deleteItem(event) {
                     updatePreview(i - 1)
                 }
             }
-        
+        }, 400, elem, index)
 
     }
 }

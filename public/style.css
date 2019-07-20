@@ -1,7 +1,44 @@
+html, body {
+    scroll-behavior: smooth;
+}
+
 .saved {
     display: none;
 }
 
+/* fade out deleted item */
+@keyframes fallOut {
+    from {
+        opacity: 1;
+        tranform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+.deleted {
+    animation: fallOut .4s ease;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.added {
+    animation: popIn .4s ease;
+}
+
+/* PREVIEW PANE STYLE */
 .menu {
     background-color: white;
     background-image: url(./background.png);

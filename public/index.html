@@ -25,6 +25,16 @@
                             <option value="/menu">local file: publish/assets/js/</option>
                         </select>
                     </div>
+                    <div class="form-group row mx-2">
+                        <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
+                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        </select>
+                    </div>
+                    <div class="form-group row mx-2 mb-0">
+                        <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
+                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
+                        </select>
+                    </div>
                 </form>
             </div>
         </div>

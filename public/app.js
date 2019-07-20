@@ -106,22 +106,64 @@ function sectionSelect() {
         formsContainer.appendChild(sectionForm)
 
 
-        // list forms for menu-items
         if (menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section items"]) {
+            // create detailed items headline and "Add" button
             let itemsHead = document.createElement('div')
             itemsHead.className = 'row'
             itemsHead.innerHTML = '<div class="col-6"><h3>Detailed Items:</h3></div><div class="col-6"> <a class="text-white btn btn-primary" onclick="addItem()">Add Item</a></div>'
             formsContainer.appendChild(itemsHead)
-            
+            // create container for detailed items
             let detailedItems = document.createElement('div')
             detailedItems.id = 'detailed-items'
             formsContainer.appendChild(detailedItems)
 
+            // create forms and previews for each detailed menu item
             menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section items"].forEach((item, iIndex) => {
+                
 
                 let itemForm = document.createElement('div')
+                itemForm.id = `row-$iIndex`
                 itemForm.className = 'row align-items-center'
-                itemForm.innerHTML = `
+
+                itemForm.innerHTML = itemFormHtml(item, iIndex)
+
+                document.getElementById('detailed-items').appendChild(itemForm)
+                updatePreview(iIndex)
+            })
+        }
+        // list forms for item-list
+        let itemListH = document.createElement('h3')
+        itemListH.innerText = "Listed Items:"
+        formsContainer.appendChild(itemListH)
+        let sectionList = menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section list"]
+        let listedItemsForm = document.createElement('div')
+        listedItemsForm.className = 'row align-items-center'
+        listedItemsForm.innerHTML = `
+            <div class="col-6">
+            <div class="rounded border shadow mb-3 p-2 bg-white"
+            <form id="list-form" oninput="changeList()">
+
+                <div class="form-group">
+                    <label for="item-list-input">Items: </label>
+                    <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
+                </div>
+
+            </form>
+            </div>
+            </div>
+            <div class="col-6">
+            <div class="menu shadow mb-3">
+            <div id="item-list-output" class="sectionlist">
+                ${sectionList || ""}
+            </div>
+            </div>
+            </div>`
+        formsContainer.appendChild(listedItemsForm)
+    }
+}
+
+function itemFormHtml(item, iIndex) {
+    return `
                 <div class="col-6">
                 <div class="rounded border shadow mb-3 p-2 bg-white">
                     <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form" oninput="changeItem(${iIndex})">
@@ -179,6 +221,11 @@ function sectionSelect() {
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a class="btn btn-danger text-white" id="item-delete-${iIndex}" onclick="deleteItem(event)">Delete</a>
+                        </div>
+                    </div>
                 </form>
                 </div>
                 </div>
@@ -190,39 +237,6 @@ function sectionSelect() {
                 </div>
                 </div>
                 `
-                document.getElementById('detailed-items').appendChild(itemForm)
-                updatePreview(iIndex)
-            })
-        }
-        // list forms for item-list
-        let itemListH = document.createElement('h3')
-        itemListH.innerText = "Listed Items:"
-        formsContainer.appendChild(itemListH)
-        let sectionList = menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section list"]
-        let listedItemsForm = document.createElement('div')
-        listedItemsForm.className = 'row align-items-center'
-        listedItemsForm.innerHTML = `
-            <div class="col-6">
-            <div class="rounded border shadow mb-3 p-2 bg-white"
-            <form id="list-form" oninput="changeList()">
-
-                <div class="form-group">
-                    <label for="item-list-input">Items: </label>
-                    <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
-                </div>
-
-            </form>
-            </div>
-            </div>
-            <div class="col-6">
-            <div class="menu shadow mb-3">
-            <div id="item-list-output" class="sectionlist">
-                ${sectionList || ""}
-            </div>
-            </div>
-            </div>`
-        formsContainer.appendChild(listedItemsForm)
-    }
 }
 
 function changeDisclaimer() {
@@ -277,87 +291,29 @@ function changeList() {
 }
 
 function addItem() {
+    // create blank item form and preview
+    const item = {}
     const iIndex = document.getElementsByClassName('item-form').length
     let itemForm = document.createElement('div')
+    itemForm.id = `row-${iIndex}`
     itemForm.className = 'row align-items-center'
-    itemForm.innerHTML = `
-                <div class="col-6">
-                <div class="rounded border shadow mb-3 p-2 bg-white">
-                    <form id="item-${iIndex}-form" data-item="${iIndex}" class="item-form" oninput="changeItem(${iIndex})">
-                    <div class="form-group">
-                        <label for="item-${iIndex}-name">Name: </label>
-                        <input type="text" name="name" id="item-${iIndex}-name" data-item="${iIndex}" class="w-100 form-control" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="item-${iIndex}-description">Description: </label>
-                        <textarea name="description" id="item-${iIndex}-description" data-item="${iIndex}" rows="1" class="w-100 form-control"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="item-${iIndex}-price">Image: </label>
-                        <input type="text" name="image" id="item-${iIndex}-image" data-item="${iIndex}" class="w-100 form-control" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="item-${iIndex}-price">Price: </label>
-                        <input type="number" name="price" id="item-${iIndex}-price" data-item="${iIndex}" class="w-100 form-control" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="item-${iIndex}-extras">Extras: </label>
-                        <textarea name="extras" id="item-${iIndex}-extras" data-item="${iIndex}" rows="1" class="w-100 form-control"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="item-${iIndex}-options">Options: </label>
-                        <textarea name="options" id="item-${iIndex}-options" data-item="${iIndex}" rows="1" class="w-100 form-control" ></textarea>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="item-${iIndex}-featured">Featured: </label>
-                                <input type="checkbox" name="featured" id="item-${iIndex}-featured" data-item="${iIndex}" >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="item-${iIndex}-glutenoption">Gluten Free Option: </label>
-                                <input type="checkbox" name="glutenoption" id="item-${iIndex}-glutenoption" data-item="${iIndex}" >
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="item-${iIndex}-vegan">Vegan: </label>
-                                <input type="checkbox" name="vegan" id="item-${iIndex}-vegan" data-item="${iIndex}" >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="item-${iIndex}-vegetarian">Vegetarian: </label>
-                                <input type="checkbox" name="vegetarian" id="item-${iIndex}-vegetarian" data-item="${iIndex}" >
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                </div>
-                </div>
-                <div class="col-6">
-                <div class="menu shadow mb-3">
-                <div id="item-${iIndex}-output" class="sectionitem">
-
-                </div>
-                </div>
-                </div>
-                `
+    itemForm.innerHTML = itemFormHtml(item, iIndex)
     document.getElementById('detailed-items').appendChild(itemForm)
+
     updatePreview(iIndex)
     window.scrollTo({
         top: document.getElementById(`item-${iIndex}-form`).offsetParent.offsetTop,
         left: 0,
         behavior: 'smooth'
-    });   
+    });
 }
 
+function deleteItem(event) {
+    const iIndex = event.target.id.split('-')[2]
+    if (confirm("Delete Item?")) {
+
+    }
+}
 function save(){
     document.getElementById('saved').classList.add('saved')
     event.preventDefault()

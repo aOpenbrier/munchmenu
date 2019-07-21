@@ -1,7 +1,9 @@
 let menuEdit
 const tabSel = document.getElementById('menutabselect')
 const sectSel = document.getElementById('menusectionselect')
-const savedEl = document.getElementById('saved')
+const savedSpan = document.getElementById('unsaved')
+const saveBtn = document.getElementById('save-btn')
+const undoBtn = document.getElementById('undo-btn')
 const formsContainer = document.getElementById('forms-container')
 
 function sourceSelect(event) {
@@ -11,17 +13,20 @@ function sourceSelect(event) {
         tabSel.innerHTML = ''
         sectSel.innerHTML = ''
         formsContainer.innerHTML = ''
-        // create placeholder option with no value
-        let tabplaceholder = document.createElement('option')
-        tabplaceholder.value = ''
-        tabplaceholder.innerText = 'Select a Menu Tab'
-        tabplaceholder.setAttribute('selected', true)
-        tabSel.appendChild(tabplaceholder)
-        // get list of menu tabs and populate select options
+
+        // get list of menu tabs
         fetch(source)
             .then(r => r.json())
             .then(r => {
+                tabSel.removeAttribute('disabled')
                 menuEdit = r
+                // create placeholder option with no value
+                let tabplaceholder = document.createElement('option')
+                tabplaceholder.value = ''
+                tabplaceholder.innerText = 'Select a Menu Tab'
+                tabplaceholder.setAttribute('selected', true)
+                tabSel.appendChild(tabplaceholder)
+                // populate select with options
                 r.forEach((tab, tabIndex) => {
                     let tabOption = document.createElement('option')
                     tabOption.value = tabIndex
@@ -37,6 +42,7 @@ function tabSelect() {
     sectSel.innerHTML = ''
     formsContainer.innerHTML = ''
     if (tabSel.value) {
+        sectSel.removeAttribute('disabled')
         let selectplaceholder = document.createElement('option')
         selectplaceholder.value = ''
         selectplaceholder.innerText = 'Select a Menu Section'
@@ -256,21 +262,19 @@ function itemFormValues(i) {
 }
 
 function changeDisclaimer() {
-
-    savedEl.classList.remove('saved')
+    savedStatus(false)
     document.getElementById('tab-disclaimer-output').innerHTML = document.getElementById('tab-disclaimer-input').value
 }
 
 function changeSection() {
     // enable "save" button and update preview
-    savedEl.classList.remove('saved')
+    savedStatus(false)
     document.getElementById('section-title-output').innerHTML = document.getElementById('section-title-input').value
     document.getElementById('section-details-output').innerHTML = document.getElementById('section-details-input').value
 }
 
 function changeItem(index) {
-    // enable "save" button and update preview
-    savedEl.classList.remove('saved')
+    savedStatus(false)
     updatePreview(index)
 }
 
@@ -296,11 +300,12 @@ function updatePreview(index) {
 }
 
 function changeList() {
-    savedEl.classList.remove('saved')
+    savedStatus(false)
     document.getElementById('item-list-output').innerHTML = document.getElementById('item-list-input').value
 }
 
 function addItem() {
+    savedStatus(false)
     // shift index of any following forms + 1
     const numForms = document.getElementsByClassName('item-form').length
     if (numForms){
@@ -312,7 +317,7 @@ function addItem() {
             updatePreview(i + 1)
         }
     }
-    // create blank item form and preview
+    // create blank item form and preview pane as first child
     const noItem = {}
     let newItemForm = itemFormHtml(noItem, 0)
     newItemForm.classList.add('added')
@@ -326,8 +331,7 @@ function deleteItem(event) {
     const index = parseInt(event.target.id.split('-')[2])
     const elem = document.getElementById(`row-${index}`)
     if (confirm("Delete Item?")) {
-        savedEl.classList.remove('saved')
-        elem.classList.add('deleted')
+        savedStatus(false)
         // animate row height to 50%
         const originalHt = elem.clientHeight
         function reduceHt() {
@@ -355,9 +359,26 @@ function deleteItem(event) {
 
     }
 }
+function savedStatus(isSaved){
+    // indicate if saved. enable/disable save/undo buttons, section selection
+    if (isSaved){
+        savedSpan.classList.add('saved')
+        saveBtn.setAttribute('disabled', true)
+        undoBtn.setAttribute('disabled', true)
+        tabSel.removeAttribute('disabled')
+        sectSel.removeAttribute('disabled')
+    } else {
+        savedSpan.classList.remove('saved')
+        saveBtn.removeAttribute('disabled')
+        undoBtn.removeAttribute('disabled')
+        tabSel.setAttribute('disabled', true)
+        sectSel.setAttribute('disabled', true)
+        document.getElementById('menusourceselect').setAttribute('disabled', true)
+    }
+}
 
 function save() {
-    savedEl.classList.add('saved')
+    savedStatus(true)
     event.preventDefault()
     const tab = tabSel.value
     const sect = sectSel.value
@@ -381,4 +402,11 @@ function save() {
             console.log(r)
         })
         .catch(e => { console.error(e) })
+}
+
+function undo(){
+    if (confirm('Undo will only undo changes since last save. To start over, refresh page and select source "web"')) {        
+        sectionSelect()
+        savedStatus(true)
+    }
 }

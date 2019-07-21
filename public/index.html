@@ -27,30 +27,36 @@
                     </div>
                     <div class="form-group row mx-2">
                         <label for="menutabselect" class="col-4 col-form-label ">Menu Tab: </label>
-                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect(event)">
+                        <select name="tab" id="menutabselect" class='form-control col-8' onchange="tabSelect()" disabled>
                         </select>
                     </div>
                     <div class="form-group row mx-2 mb-0">
                         <label for="menusectionselect" class="col-4 col-form-label">Section: </label>
-                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect(event)">
+                        <select name="section" id="menusectionselect" class="form-control col-8" onchange="sectionSelect()" disabled>
                         </select>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="fixed-top col-6 offset-6">
-            <div id="saved" class="saved">
-                        <div class="text-center py-2">
-                            <a class="btn btn-primary text-white" onclick="save()">Save</a>
-                        </div>
-                    </div>
+        <div class="fixed-top col-6 offset-6 pt-2">
+
+            <div class="row">
+                <div class="col-6 d-flex justify-content-around align-items-center bg-white rounded shadow p-2">
+                    <button type="button" id="undo-btn" class="btn btn-danger text-white" onclick="undo()" disabled>Undo</button>
+                    <button type="button" id="save-btn" class="btn btn-primary text-white" onclick="save()" disabled>Save</button>
+                </div>
+                <div class="col-6 d-flex align-items-center">
+                    <span id="unsaved" class="saved alert alert-warning shadow mb-0 pt-2">Unsaved Changes!</span>
+                </div>
             </div>
-        </div>
-        <div id="forms-container" class='pb-5'>
+
 
         </div>
+    </div>
+    <div id="forms-container" class='pb-5'>
 
     </div>
+
 
     <script src='https://code.jquery.com/jquery-3.3.1.js' integrity='sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=' crossorigin='anonymous'></script>
     <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js' integrity='sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T' crossorigin='anonymous'></script>

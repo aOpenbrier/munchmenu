@@ -98,7 +98,7 @@ function sectionSelect() {
             </div>
             <div class="form-group">
                 <label for="section-details-input">Section Details: </label>
-                <textarea name="details" id="section-details-input" rows="${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] ? '2' : '1'}" class="w-100 form-control" placeholder="e.g. Rice is not included. Please order separately.">${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] || ""}</textarea>
+                <textarea name="details" id="section-details-input" rows="${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] ? '2' : '1'}" class="w-100 form-control" placeholder="e.g. Rice is not included with curry tray orders. Please order separately.">${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] || ""}</textarea>
             </div>
         </form>
         </div>
@@ -144,12 +144,10 @@ function sectionSelect() {
             <div class="col-6">
             <div class="rounded border shadow mb-3 p-2 bg-white"
             <form id="list-form" oninput="changeList()">
-
                 <div class="form-group">
                     <label for="item-list-input">Items: </label>
                     <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control" placeholder="e.g. Coke | $1.75<br> Mexican Coke | $2.75" $>${sectionList || ""}</textarea>
                 </div>
-
             </form>
             </div>
             </div>
@@ -177,31 +175,25 @@ function itemFormHtml(item, index) {
                         <label for="item-${index}-name">Name: </label>
                         <input type="text" name="name" id="item-${index}-name" class="w-100 form-control" value="${item.name || ""}">
                     </div>
-
                     <div class="form-group">
                         <label for="item-${index}-description">Description: </label>
                         <textarea name="description" id="item-${index}-description" rows="${item.description ? '2' : '1'}" class="w-100 form-control">${item.description || ""}</textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="item-${index}-price">Image: </label>
                         <input type="text" name="image" id="item-${index}-image" class="w-100 form-control" value="${item.image || ""}">
                     </div>
-
                     <div class="form-group">
                         <label for="item-${index}-price">Price: </label>
                         <input type="number" name="price" id="item-${index}-price" class="w-100 form-control" value="${item.price || ""}">
                     </div>
-
                     <div class="form-group">
                         <label for="item-${index}-extras">Extras: </label>
                         <textarea name="extras" id="item-${index}-extras" rows="${item.extras ? '3' : '1'}" class="w-100 form-control" placeholder="e.g. Chicken $14 Beef $15">${item.extras || ""}</textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="item-${index}-options">Options: </label>
                         <textarea name="options" id="item-${index}-options" rows="${item.options ? '3' : '1'}" class="w-100 form-control" placeholder="e.g. Options: soft tofu, cripsy tofu, mixed veggies" >${item.options || ""}</textarea>
-
                     </div>
                     <div class="row">
                         <div class="col-6">
@@ -209,7 +201,6 @@ function itemFormHtml(item, index) {
                                 <label for="item-${index}-featured">Featured: </label>
                                 <input type="checkbox" name="featured" id="item-${index}-featured" ${item.featured ? "checked" : ""} >
                             </div>
-
                             <div class="form-group">
                                 <label for="item-${index}-glutenoption">Gluten Free Option: </label>
                                 <input type="checkbox" name="glutenoption" id="item-${index}-glutenoption" ${item["gf option"] ? "checked" : ""}>
@@ -220,7 +211,6 @@ function itemFormHtml(item, index) {
                                 <label for="item-${index}-vegan">Vegan: </label>
                                 <input type="checkbox" name="vegan" id="item-${index}-vegan" ${item.vegan ? "checked" : ""} >
                             </div>
-
                             <div class="form-group">
                                 <label for="item-${index}-vegetarian">Vegetarian: </label>
                                 <input type="checkbox" name="vegetarian" id="item-${index}-vegetarian" ${item.vegetarian ? "checked" : ""} >
@@ -229,7 +219,12 @@ function itemFormHtml(item, index) {
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a class="btn btn-danger text-white" id="item-delete-${index}" onclick="deleteItem(event)">Delete</a>
+                            <button type="button" class="btn btn-danger text-white" id="item-delete-${index}" onclick="deleteItem(event)"><i id="icon-del-${index}" class="material-icons">delete</i></button>
+                        </div>
+                        <div class="col-6">
+                        Reorder: 
+                            <button type="button" class="btn btn-primary text-white" id="item-prev-${index}" onclick="raiseItem(event)"><i id="icon-up-${index}" class="material-icons">arrow_upward</i></button>
+                            <button type="button" class="btn btn-primary text-white" id="item-next-${index}" onclick="lowerItem(event)"><i id="icon-down-${index}" class="material-icons">arrow_downward</i></button>
                         </div>
                     </div>
                 </form>
@@ -237,9 +232,8 @@ function itemFormHtml(item, index) {
                 </div>
                 <div class="col-6">
                 <div class="menu shadow mb-3">
-                <div id="item-${index}-output" class="sectionitem">
-
-                </div>
+                    <div id="item-${index}-output" class="sectionitem">
+                    </div>
                 </div>
                 </div>
                 `
@@ -327,7 +321,41 @@ function addItem() {
     document.getElementById('detailed-header').scrollIntoView()
 }
 
+function raiseItem(event){
+    event.preventDefault()
+    const index = parseInt(event.target.id.split('-')[2])
+    if (index){
+        savedStatus(false)
+        const new1stForm = itemFormHtml(itemFormValues(index), index-1)
+        const new2ndForm = itemFormHtml(itemFormValues(index - 1), index)
+        document.getElementById(`row-${index - 1}`).parentNode.removeChild(document.getElementById(`row-${index - 1}`))
+        document.getElementById(`row-${index}`).parentNode.removeChild(document.getElementById(`row-${index}`))
+        document.getElementById('detailed-items').insertBefore(new2ndForm, document.getElementById(`row-${index + 1}`))
+        document.getElementById('detailed-items').insertBefore(new1stForm, document.getElementById(`row-${index}`))
+        updatePreview(index)
+        updatePreview(index-1)
+    }
+}
+
+function lowerItem(event){
+    event.preventDefault()
+    const index = parseInt(event.target.id.split('-')[2])
+    if (index < document.getElementsByClassName('item-form').length - 1){
+        savedStatus(false)
+        const new1stForm = itemFormHtml(itemFormValues(index + 1), index)
+        const new2ndForm = itemFormHtml(itemFormValues(index), index + 1)
+        document.getElementById(`row-${index + 1}`).parentNode.removeChild(document.getElementById(`row-${index + 1}`))
+        document.getElementById(`row-${index}`).parentNode.removeChild(document.getElementById(`row-${index}`))
+        document.getElementById('detailed-items').insertBefore(new2ndForm, document.getElementById(`row-${index + 2}`))
+        document.getElementById('detailed-items').insertBefore(new1stForm, document.getElementById(`row-${index + 1}`))
+        updatePreview(index)
+        updatePreview(index + 1)
+    }
+
+}
+
 function deleteItem(event) {
+    event.preventDefault()
     const index = parseInt(event.target.id.split('-')[2])
     const elem = document.getElementById(`row-${index}`)
     if (confirm("Delete Item?")) {
@@ -359,6 +387,7 @@ function deleteItem(event) {
 
     }
 }
+
 function savedStatus(isSaved){
     // indicate if saved. enable/disable save/undo buttons, section selection
     if (isSaved){

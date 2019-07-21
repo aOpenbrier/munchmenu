@@ -22,7 +22,6 @@ function sourceSelect(event) {
             .then(r => r.json())
             .then(r => {
                 menuEdit = r
-
                 r.forEach((tab, tabIndex) => {
                     let tabOption = document.createElement('option')
                     tabOption.value = tabIndex
@@ -54,9 +53,10 @@ function tabSelect() {
 
 function sectionSelect() {
     formsContainer.innerHTML = ''
+    // Create tab disclaimer form
     if (sectSel.value) {
         let tabForm = document.createElement('div')
-        tabForm.className = 'row align-items-center'
+        tabForm.className = 'row align-items-center added'
         tabForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
@@ -79,9 +79,9 @@ function sectionSelect() {
         `
         formsContainer.appendChild(tabForm)
 
-        // section editing forms
+        // Create section editing forms
         let sectionForm = document.createElement('div')
-        sectionForm.className = 'row align-items-center'
+        sectionForm.className = 'row align-items-center added'
         sectionForm.innerHTML = `
         <div class="col-6">
         <div class="rounded border shadow mb-3 p-2 bg-white">
@@ -92,7 +92,7 @@ function sectionSelect() {
             </div>
             <div class="form-group">
                 <label for="section-details-input">Section Details: </label>
-                <textarea name="details" id="section-details-input" rows="${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] ? '2' : '1'}" class="w-100 form-control">${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] || ""}</textarea>
+                <textarea name="details" id="section-details-input" rows="${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] ? '2' : '1'}" class="w-100 form-control" placeholder="e.g. Rice is not included. Please order separately.">${menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section details"] || ""}</textarea>
             </div>
         </form>
         </div>
@@ -122,8 +122,8 @@ function sectionSelect() {
             // create forms and previews for each detailed menu item
             menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section items"].forEach((item, index) => {
                 let itemForm = itemFormHtml(item, index)
-                document.getElementById('detailed-items').appendChild(itemForm)
                 itemForm.classList.add('added')
+                document.getElementById('detailed-items').appendChild(itemForm)
                 updatePreview(index)
             })
         }
@@ -141,7 +141,7 @@ function sectionSelect() {
 
                 <div class="form-group">
                     <label for="item-list-input">Items: </label>
-                    <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control">${sectionList || ""}</textarea>
+                    <textarea name="list" id="item-list-input" rows="5" class="w-100 form-control" placeholder="e.g. Coke | $1.75<br> Mexican Coke | $2.75" $>${sectionList || ""}</textarea>
                 </div>
 
             </form>
@@ -189,12 +189,12 @@ function itemFormHtml(item, index) {
 
                     <div class="form-group">
                         <label for="item-${index}-extras">Extras: </label>
-                        <textarea name="extras" id="item-${index}-extras" rows="${item.extras ? '3' : '1'}" class="w-100 form-control">${item.extras || ""}</textarea>
+                        <textarea name="extras" id="item-${index}-extras" rows="${item.extras ? '3' : '1'}" class="w-100 form-control" placeholder="e.g. Chicken $14 Beef $15">${item.extras || ""}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="item-${index}-options">Options: </label>
-                        <textarea name="options" id="item-${index}-options" rows="${item.options ? '3' : '1'}" class="w-100 form-control" >${item.options || ""}</textarea>
+                        <textarea name="options" id="item-${index}-options" rows="${item.options ? '3' : '1'}" class="w-100 form-control" placeholder="e.g. Options: soft tofu, cripsy tofu, mixed veggies" >${item.options || ""}</textarea>
 
                     </div>
                     <div class="row">

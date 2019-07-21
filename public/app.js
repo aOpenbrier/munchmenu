@@ -110,6 +110,7 @@ function sectionSelect() {
         if (menuEdit[tabSel.value].sections[parseInt(sectSel.value)]["section items"]) {
             // create detailed items headline and "Add" button
             let itemsHead = document.createElement('div')
+            itemsHead.id = 'detailed-header'
             itemsHead.className = 'row'
             itemsHead.innerHTML = '<div class="col-6"><h3>Detailed Items:</h3></div><div class="col-6"> <a class="text-white btn btn-primary" onclick="addItem()">Add Item</a></div>'
             formsContainer.appendChild(itemsHead)
@@ -300,14 +301,25 @@ function changeList() {
 }
 
 function addItem() {
+    // shift index of any following forms + 1
+    const numForms = document.getElementsByClassName('item-form').length
+    if (numForms){
+        for (let i = numForms - 1 ; i >= 0; i--){
+            const item = itemFormValues(i)
+            let itemForm = itemFormHtml(item, i + 1)
+            document.getElementById('detailed-items').insertBefore(itemForm, document.getElementById(`row-${i + 2}`) )
+            document.getElementById(`row-${i}`).parentNode.removeChild(document.getElementById(`row-${i}`))
+            updatePreview(i + 1)
+        }
+    }
     // create blank item form and preview
-    const item = {}
-    const index = document.getElementsByClassName('item-form').length
-    let itemForm = itemFormHtml(item, index)
-    itemForm.classList.add('added')
-    document.getElementById('detailed-items').appendChild(itemForm)
-    updatePreview(index)
-    document.getElementById(`item-${index}-form`).scrollIntoView()
+    const noItem = {}
+    let newItemForm = itemFormHtml(noItem, 0)
+    newItemForm.classList.add('added')
+    document.getElementById('detailed-items').insertBefore(newItemForm, document.getElementById('row-1'))
+    updatePreview(0)
+    document.getElementById(`item-0-name`).focus()
+    document.getElementById('detailed-header').scrollIntoView()
 }
 
 function deleteItem(event) {
@@ -320,7 +332,6 @@ function deleteItem(event) {
         const originalHt = elem.clientHeight
         function reduceHt() {
             elem.style.height = (elem.clientHeight - (originalHt / 20)) + 'px'
-            console.log(elem.clientHeight + " - " + (originalHt / 20) + 'px = ' + (elem.clientHeight - (originalHt / 40)) + 'px')
         }
         let setInt = setInterval(reduceHt, 20)
 

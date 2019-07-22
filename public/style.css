@@ -9,11 +9,22 @@ html, body {
 #forms-container textarea::placeholder{
     color: #bbb;
 }
-/* fade out deleted item */
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @keyframes fallOut {
     from {
         opacity: 1;
-        tranform: scale(1);
+        transform: scale(1);
     }
     to {
         opacity: 0;
@@ -21,24 +32,22 @@ html, body {
     }
 }
 
+.added {
+    animation: popIn .4s ease;
+}
+
 .deleted {
     animation: fallOut .4s ease;
 }
 
-@keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(.5);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.raised {
+    transition: transform .4s ease;
+    transform: translate(0, -100%);
 }
 
-.added {
-    animation: popIn .4s ease;
+.lowered {
+    transition: transform .4s ease;
+    transform: translate(0, 100%);
 }
 
 /* PREVIEW PANE STYLE */

@@ -326,14 +326,20 @@ function raiseItem(event){
     const index = parseInt(event.target.id.split('-')[2])
     if (index){
         savedStatus(false)
-        const new1stForm = itemFormHtml(itemFormValues(index), index-1)
-        const new2ndForm = itemFormHtml(itemFormValues(index - 1), index)
-        document.getElementById(`row-${index - 1}`).parentNode.removeChild(document.getElementById(`row-${index - 1}`))
-        document.getElementById(`row-${index}`).parentNode.removeChild(document.getElementById(`row-${index}`))
-        document.getElementById('detailed-items').insertBefore(new2ndForm, document.getElementById(`row-${index + 1}`))
-        document.getElementById('detailed-items').insertBefore(new1stForm, document.getElementById(`row-${index}`))
-        updatePreview(index)
-        updatePreview(index-1)
+        const toRaise = itemFormHtml(itemFormValues(index), index-1)
+        const toLower = itemFormHtml(itemFormValues(index - 1), index)
+        // animate raising and lowering rows
+        document.getElementById(`row-${index}`).classList.add('raised')
+        document.getElementById(`row-${index - 1}`).classList.add('lowered')
+        setTimeout(() => {
+            // after animation, remove old rows, replace with corrected ID rows
+            document.getElementById(`row-${index - 1}`).parentNode.removeChild(document.getElementById(`row-${index - 1}`))
+            document.getElementById(`row-${index}`).parentNode.removeChild(document.getElementById(`row-${index}`))
+            document.getElementById('detailed-items').insertBefore(toLower, document.getElementById(`row-${index + 1}`))
+            document.getElementById('detailed-items').insertBefore(toRaise, document.getElementById(`row-${index}`))
+            updatePreview(index)
+            updatePreview(index - 1)
+        }, 400, index, toRaise, toLower)
     }
 }
 
@@ -342,16 +348,19 @@ function lowerItem(event){
     const index = parseInt(event.target.id.split('-')[2])
     if (index < document.getElementsByClassName('item-form').length - 1){
         savedStatus(false)
-        const new1stForm = itemFormHtml(itemFormValues(index + 1), index)
-        const new2ndForm = itemFormHtml(itemFormValues(index), index + 1)
+        const toRaise = itemFormHtml(itemFormValues(index + 1), index)
+        const toLower = itemFormHtml(itemFormValues(index), index + 1)
+        document.getElementById(`row-${index + 1}`).classList.add('raised')
+        document.getElementById(`row-${index}`).classList.add('lowered')
+        setTimeout(() => {
         document.getElementById(`row-${index + 1}`).parentNode.removeChild(document.getElementById(`row-${index + 1}`))
         document.getElementById(`row-${index}`).parentNode.removeChild(document.getElementById(`row-${index}`))
-        document.getElementById('detailed-items').insertBefore(new2ndForm, document.getElementById(`row-${index + 2}`))
-        document.getElementById('detailed-items').insertBefore(new1stForm, document.getElementById(`row-${index + 1}`))
+        document.getElementById('detailed-items').insertBefore(toLower, document.getElementById(`row-${index + 2}`))
+        document.getElementById('detailed-items').insertBefore(toRaise, document.getElementById(`row-${index + 1}`))
         updatePreview(index)
         updatePreview(index + 1)
+        }, 400, index, toRaise, toLower)
     }
-
 }
 
 function deleteItem(event) {
@@ -361,6 +370,7 @@ function deleteItem(event) {
     if (confirm("Delete Item?")) {
         savedStatus(false)
         // animate row height to 50%
+        document.getElementById(`row-${index}`).classList.add('deleted')
         const originalHt = elem.clientHeight
         function reduceHt() {
             elem.style.height = (elem.clientHeight - (originalHt / 20)) + 'px'

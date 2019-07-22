@@ -7,16 +7,15 @@ Project uses node server environment. If you haven't already, install [Node.js](
 2. Install dependencies:
    - Using Command Line (Win: cmd or powershell, Mac: terminal) navigate to application directory e.g. `cd downloads/munchmenu-master`
    - From within application directory, enter at command line: `npm i`  
-  
-Node only needs to be installed once on the Device  
-Run `npm i` again if updating or redownloading the application
 
 ## Using Application
 
 #### To Run:
 1. Start local server: 
    - From within application directory, enter at command line: `node server.js`
-2. Navigate browser to `localhost:3000`  
+2. Navigate browser to [localhost:3000](localhost:3000)  
+
+![powershell screenshot change directory then run command: node server.js](./readme/shell.jpg)
 
 #### Getting Started:
 1. Select a **source** from the dropdown:
@@ -34,7 +33,7 @@ Dropdowns are disabled when changes have been made to forms. Save or undo change
 #### Features:
 
 * **Preview**
-  - Preview pane shows menu as formatted on website. Changes are updated live as you type.
+  - Preview pane shows menu as formatted on website. Changes are updated live as you type. For image preview, image must already be uploaded to website to `/assets/images`
 * **Add**
   - Click Add button. A new blank form will appear at the top of detailed items section. 
 * **Delete**

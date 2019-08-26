@@ -1,11 +1,13 @@
 const axios = require('axios')
 const fs = require('fs')
 const path = require('path')
+const updateSiteFiles = require('../controllers/updatesitefiles')
 
 module.exports = (app) => {
 
     app.put('/menu', (req, res) => {
-        fs.writeFile(path.join(__dirname, '..', 'publish', 'assets', 'js', 'menu.json'), JSON.stringify(req.body, null, 1), (e) => e && console.error(e))
+        fs.writeFileSync(path.join(__dirname, '..', 'publish', 'assets', 'js', 'menu.json'), JSON.stringify(req.body, null, 1), (e) => e && console.error(e))
+        updateSiteFiles(req.body)
         res.sendStatus(200)
     })
 

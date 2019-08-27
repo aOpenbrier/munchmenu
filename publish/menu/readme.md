@@ -1,0 +1,1 @@
+This folder will contain html files for menu items. You may delete this readme from your computer.

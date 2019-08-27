@@ -55,10 +55,10 @@ module.exports = function (menu) {
                 <div>
                 <a class="backbutton" href="../index.html#ourmenu"><i class="material-icons" role="presentation">arrow_back_ios</i>Back to Menu</a>
                 </div>
-                <div id="top" class="menu">
-                <div class="itempage">
+                <div id="top" class="menu itempage">
+                <div tabindex="0" aria-labelledby="itemname">
             <img class="itempagelogo" src="../assets/images/logo.png" alt="Munch Logo">
-            <h5 class="itemname">${item.name}</h5>
+            <h5 id="itemname" class="itemname">${item.name}</h5>
             <p class="itemdesc">${item.description}</p>
             ${item["gf option"] ? `<p class="itemdietary">*Gluten-free optional</p>` : ''}
             ${item.vegan ? `<p class="itemdietary">*Vegan</p>` : ''}
@@ -79,9 +79,9 @@ module.exports = function (menu) {
         <a aria-label="Find on Instagram" href="https://www.facebook.com/munchthaifood/" rel="noopener" target="_blank"><img class="invert" src="../assets/images/instagram.png" alt="instagram logo"></a>
         <a aria-label="Like on Facebook" href="https://www.instagram.com/munchthaifood/" rel="noopener" target="_blank"> <img src="../assets/images/facebook.png" alt="facebook logo"></a>
     </div>
-    <div id='location' class="location">
-        <div>
-            <p>Location</p>
+    <div id="location" class="location">
+        <div tabindex="0" aria-labelledby="locheader">
+            <p id="locheader">Location</p>
             <p>Munch - Thai Food & Sweet Tea</p>
             <p>880 W Lincoln Ave</p>
             <p>Anaheim, CA 92805</p>
@@ -132,7 +132,7 @@ module.exports = function (menu) {
 <header>
     <a class="sr-only sr-only-focusable" href="#top">skip navigation</a>
     <nav>
-        <ul id='nav-collapse' role="menu">
+        <ul id="nav-collapse" role="menu">
             <li role="presentation" class='order'>
                 <a role="menuitem" href="https://www.toasttab.com/munch-thai/v2/online-order#!/" target="_blank">Order<span class='hidemobile'> Online</span></a>
             </li>
@@ -152,11 +152,11 @@ module.exports = function (menu) {
             <div>
                 <a class="backbutton" href="../index.html#ourmenu"><i class="material-icons" role="presentation">arrow_back_ios</i>Back to Menu</a>
             </div>
-            <div id="top" class="menu">
-                <h1>Sitemap</h1>
+            <div id="top" class="menu" tabindex="0" aria-labelledby="header1">
+                <h1 id="header1">Sitemap</h1>
                 <br>
                 <ul>
-                    ${sitemap.map(item => `<li><a href=${item}>${item}</a></li>`).join('\n')}
+                    ${sitemap.map(item => `<li><a href="${item}">${item}</a></li>`).join('\n')}
                 </ul>
             </div>
     </main>
@@ -166,8 +166,8 @@ module.exports = function (menu) {
             <a aria-label="Like on Facebook" href="https://www.instagram.com/munchthaifood/" rel="noopener" target="_blank"> <img src="../assets/images/facebook.png" alt="facebook logo"></a>
         </div>
         <div id="location" class="location">
-            <div>
-                <p>Location</p>
+            <div tabindex="0" aria-labelledby="locheader"
+                <p id="locheader">Location</p>
                 <p>Munch - Thai Food & Sweet Tea</p>
                 <p>880 W Lincoln Ave</p>
                 <p>Anaheim, CA 92805</p>

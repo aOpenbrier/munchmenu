@@ -1,5 +1,5 @@
 const fs = require('fs')
-let sitemap = ['https://www.munchthai.com', 'https://www.munchthai.com/sitemap.html']
+let sitemap = []
 
 module.exports = function (menu) {
 
@@ -94,7 +94,7 @@ module.exports = function (menu) {
 </html>
 `
                             // add page to sitemap
-                            sitemap.push(`https://www.munchthai.com/menu/${filename}`)
+                            sitemap.push({name: item.name, url: `https://www.munchthai.com/menu/${filename}`})
                             fs.writeFileSync(`./publish/menu/${filename}`, data, (e) => e && console.error(e))
 
                         }
@@ -104,7 +104,8 @@ module.exports = function (menu) {
         }
     })
     
-    const text = sitemap.join(`\n`)
+    let text = sitemap.map(page => page.url).join(`\n`)
+    text = 'https://www.munchthai.com\nhttps://www.munchthai.com/sitemap.html\n'+ text
     fs.writeFileSync(`./publish/sitemap.txt`, text, (e) => e && console.error(e))
     
     const html = `
@@ -121,11 +122,11 @@ module.exports = function (menu) {
     <meta property="og:image" content="https://www.munchthai.com/assets/images/header.jpg">
     <meta property="og:url" content="https://www.munchthai.com/sitemap.html">
     <meta name="theme-color" content="#c4001b">
-    <link rel="shortcut icon" href="../assets/images/favicon.png">
+    <link rel="shortcut icon" href="./assets/images/favicon.png">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/reset.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
@@ -150,20 +151,25 @@ module.exports = function (menu) {
     <main>
         <div class="menucontainer">
             <div>
-                <a class="backbutton" href="../index.html#ourmenu"><i class="material-icons" role="presentation">arrow_back_ios</i>Back to Menu</a>
+                <a class="backbutton" href="./index.html#ourmenu"><i class="material-icons" role="presentation">arrow_back_ios</i>Back to Menu</a>
             </div>
-            <div id="top" class="menu" tabindex="0" aria-labelledby="header1">
+            <div id="top" class="menu itempage" tabindex="0" aria-labelledby="header1">
                 <h1 id="header1">Sitemap</h1>
                 <br>
                 <ul>
-                    ${sitemap.map(item => `<li><a href="${item}">${item}</a></li>`).join('\n')}
+                    <li><a href="https://www.munchthai.com">Munchthai.com Home</a></li>
+                    <li><a href="https://www.munchthai.com/sitemap.html">Sitemap</a></li>
+                </ul>
+                <h2>Menu</h2>
+                <ul>
+                    ${sitemap.map(page => `<li><a href="${page.url}">${page.name}</a></li>`).join('\n')}
                 </ul>
             </div>
     </main>
     <footer>
         <div class="sociallinks">
-            <a aria-label="Find on Instagram" href="https://www.facebook.com/munchthaifood/" rel="noopener" target="_blank"><img class="invert" src="../assets/images/instagram.png" alt="instagram logo"></a>
-            <a aria-label="Like on Facebook" href="https://www.instagram.com/munchthaifood/" rel="noopener" target="_blank"> <img src="../assets/images/facebook.png" alt="facebook logo"></a>
+            <a aria-label="Find on Instagram" href="https://www.facebook.com/munchthaifood/" rel="noopener" target="_blank"><img class="invert" src="./assets/images/instagram.png" alt="instagram logo"></a>
+            <a aria-label="Like on Facebook" href="https://www.instagram.com/munchthaifood/" rel="noopener" target="_blank"> <img src="./assets/images/facebook.png" alt="facebook logo"></a>
         </div>
         <div id="location" class="location">
             <div tabindex="0" aria-labelledby="locheader"
@@ -175,7 +181,7 @@ module.exports = function (menu) {
             </div>
         </div>
     </footer>
-    <script src="../assets/js/nav.js"></script>
+    <script src="./assets/js/nav.js"></script>
 </body>
 
 </html>
